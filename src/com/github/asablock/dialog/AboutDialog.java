@@ -1,4 +1,4 @@
-package com.github.asablock;
+package com.github.asablock.dialog;
 
 import javax.swing.*;
 import java.awt.event.*;

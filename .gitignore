@@ -1,5 +1,6 @@
 run/
 .idea/
 *.iml
-*.form
+src/com/github/asablock/dialog/*.form
+src/com/github/asablock/screens/*.form
 out/
