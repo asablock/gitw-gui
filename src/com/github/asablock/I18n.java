@@ -19,11 +19,11 @@ public class I18n {
         return bundle.getString(key).formatted(args);
     }
 
-    public static void setLocale(Locale locale) {
+    public static void setCurrentLocale(Locale locale) {
         bundle = ResourceBundle.getBundle("gitw", locale);
     }
 
-    public static Locale getLocale() {
+    public static Locale getCurrentLocale() {
         return bundle.getLocale();
     }
 
@@ -40,6 +40,7 @@ public class I18n {
     }
 
     static {
-        setLocale(Locale.getDefault());
+        setCurrentLocale(Locale.getDefault());
+        //setCurrentLocale(new Locale("en", "US"));
     }
 }
