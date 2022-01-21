@@ -1,8 +1,7 @@
 package com.github.asablock;
 
 import javax.swing.JComboBox;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class I18n {
     private static ResourceBundle bundle;
@@ -11,11 +10,11 @@ public class I18n {
             new Locale("en", "US")
     };
 
-    public static String translate(String key) {
+    public static String translate(@ResourceBundleKey String key) {
         return bundle.getString(key);
     }
 
-    public static String translate(String key, Object... args) {
+    public static String translate(@ResourceBundleKey String key, Object... args) {
         return bundle.getString(key).formatted(args);
     }
 
@@ -31,12 +30,12 @@ public class I18n {
         return bundle;
     }
 
-    public static Locale[] getSupportedLocales() {
-        return SUPPORTED_LOCALES.clone();
-    }
-
     public static JComboBox<Locale> toLocaleComboBox() {
         return new JComboBox<>(SUPPORTED_LOCALES);
+    }
+
+    public static Locale[] getSupportedLocales() {
+        return SUPPORTED_LOCALES.clone();
     }
 
     static {

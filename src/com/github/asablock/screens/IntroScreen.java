@@ -5,17 +5,17 @@ import com.github.asablock.I18n;
 import com.github.asablock.UserConfig;
 import com.github.asablock.Util;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 public class IntroScreen extends Screen {
     @Override
-    protected void init(JFrame frame) {
+    protected void init(JFrame frame, JPanel panel) {
         frame.setTitle(I18n.translate("text.title"));
         frame.setPreferredSize(new Dimension(350, 200));
         frame.setLocationRelativeTo(null);
@@ -53,7 +53,8 @@ public class IntroScreen extends Screen {
 
         JButton selectFileButton = new JButton(I18n.translate("button.filechooser"));
         selectFileButton.setPreferredSize(new Dimension(80, 30));
-        Util.FileHolder holder = Util.toFileSelectorButton(selectFileButton, frame, false, new FileFilter() {
+        Util.FileHolder holder = Util.toFileChooserButton(selectFileButton, frame, false,
+                false, new FileFilter() {
             @Override
             public boolean accept(File f) {
                 return f.isDirectory() || "git.exe".equals(f.getName());
@@ -63,23 +64,29 @@ public class IntroScreen extends Screen {
             public String getDescription() {
                 return I18n.translate("text.filechooser.gitexe");
             }
-        }, false);
+        });
         panel.add(selectFileButton, BorderLayout.CENTER);
 
         JButton okButton = new JButton(I18n.translate("button.ok"));
         okButton.setPreferredSize(new Dimension(0, 30));
-        okButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (holder.getFile() != null) {
-                    UserConfig.setGitFile(holder.getFile());
-                    new MainScreen().show(IntroScreen.this);
-                } else {
-                    JOptionPane.showMessageDialog(frame, I18n.translate("label.intro.filenotselected"),
-                            I18n.translate("text.warning"), JOptionPane.WARNING_MESSAGE);
-                }
+        okButton.addMouseListener(Util.newMouseListener(event -> {
+            if (holder.getFile() != null) {
+                UserConfig.setGitFile(holder.getFile());
+                new MainScreen().show(IntroScreen.this);
+            } else {
+                JOptionPane.showMessageDialog(frame, I18n.translate("label.intro.filenotselected"),
+                        I18n.translate("text.warning"), JOptionPane.WARNING_MESSAGE);
             }
-        });
+        }));
         panel.add(okButton, BorderLayout.SOUTH);
+    }
+
+    @Override
+    protected void onClose(JFrame frame, WindowEvent event) {
+        if (JOptionPane.showConfirmDialog(frame, I18n.translate("label.intro.unsaved"),
+                I18n.translate("text.warning"), JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION) {
+            System.exit(0);
+        }
     }
 }
